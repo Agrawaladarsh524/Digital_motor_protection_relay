@@ -1,0 +1,46 @@
+====================================================================
+DIGITAL MOTOR PROTECTION RELAY - RESULTS
+I_set = 10 A   tau = 400 s   k_ult = 1.05   K_neg = 6
+====================================================================
+
+FIG 1  trip characteristic
+  tau = 400 s   class-10 window bounds tau to 186-465 s
+  trip at 7.2x cold = 8.60 s   -> inside class 10 (4-10 s)  PASS
+  trip at 1.20x     = 580 s (9.7 min)  -> under 2 h  PASS
+  trip at 1.05x     = infinite (M^2-1 = 0)             -> no trip  PASS
+
+FIG 2  start then overload
+  a single 2 s DOL start at 6.5x costs Theta = 0.191 (19% of thermal capacity)
+  after 5 min at rated current Theta settles at 0.569
+  49 thermal overload at t = 539 s, i.e. 4.0 min after the 1.3x overload began
+
+FIG 3  thermal memory + restart inhibit
+  starts allowed = 3; theta before blocked request = 0.821
+  4th start request -> BLOCKED
+  cooling time until theta < 0.60 = 502.6 s
+  restart permitted after cooling = True
+  memoryless comparison resets theta at each stop, so it does not accumulate history
+
+FIG 4  single phasing
+  remaining phases at 1.6x setting -> I1 = 9.24 A, I2 = 9.24 A, I2/I1 = 1.00
+  K=0: I_eq= 9.24 A  M=0.88  -> never trips
+  K=1: I_eq=13.06 A  M=1.24  -> 415 s
+  K=3: I_eq=18.48 A  M=1.76  -> 156 s
+  K=6: I_eq=24.44 A  M=2.33  -> 82 s
+  WITHOUT compensation the relay sees only 0.88x setting and NEVER
+  trips, while the motor cooks. This single result justifies the
+  entire negative-sequence term.
+  In the full relay the dedicated element 46 (I2/I1 > 0.5) fires
+  immediately; the K=6 value above is a thermal-only sensitivity result.
+
+FIG 5  sensitivity and limitation
+  hot/cold trip-time ratio: 6.6 at 1.3x rising to 10.7 at 10x
+  Commercial reference curves examined in this study show substantially
+  smaller hot/cold separation; no universal 2-3 ratio is assumed here.
+  Cause: one thermal mass cannot
+  represent a fast-heating winding AND a slow-heating frame.
+  A higher-fidelity model would use separate thermal states for the
+  fast-heating winding and slower frame, then combine their states.
+
+====================================================================
+figures written: fig1..fig5 png
